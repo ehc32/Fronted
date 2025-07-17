@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
-import { Send, User, Phone, Bot, MessageCircle, ArrowLeft, Check, ExternalLink } from "lucide-react"
+import { Send, User, Phone, Bot, MessageCircle, ArrowLeft, Check, ExternalLink, Loader2 } from "lucide-react" // Added Loader2
 import { Button } from "@/components/ui/button"
 
 // Import types and constants
@@ -11,7 +11,7 @@ import { MAIN_QUESTIONS, ROOM_QUESTIONS, ADDITIONAL_SPACES } from "@/constants/q
 // Import utilities
 import { generateCompleteQuotation } from "@/utils/quotation-generator"
 import { generatePDFDocument } from "@/utils/api-client"
-import { saveQuotationDataToLocalStorage, clearQuotationDataFromLocalStorage } from "@/utils/storage" // Import the new storage utility
+import { saveQuotationDataToLocalStorage, clearQuotationDataFromLocalStorage } from "@/utils/storage"
 
 /**
  * Enhanced Chatbot Component for Architectural Quotations
@@ -133,7 +133,7 @@ const EnhancedChatbotCotizacion = ({ onBack }: ChatbotProps) => {
           const quotationData = generateCompleteQuotation(finalUserData, responses, additionalRooms)
 
           // Save user data and responses to local storage, including the economic proposal
-          saveQuotationDataToLocalStorage(finalUserData, responses, quotationData.economicProposalJSON) // ADDED quotationData.economicProposalJSON
+          saveQuotationDataToLocalStorage(finalUserData, responses, quotationData.economicProposalJSON)
 
           addMessage("bot", quotationData.cotizacionTexto)
           addMessage("bot", "¿Te gustaría descargar el documento oficial de cotización?", [
@@ -145,7 +145,7 @@ const EnhancedChatbotCotizacion = ({ onBack }: ChatbotProps) => {
               data: quotationData,
             },
             { letra: "B", text: "📋 Solo conservar resumen", value: "resumen", action: "summary" },
-            { letra: "C", text: "🔄 Iniciar nueva cotización", value: "new_quotation", action: "reset" }, // ADDED new option
+            { letra: "C", text: "🔄 Iniciar nueva cotización", value: "new_quotation", action: "reset" },
           ])
           setStep("final")
         }, 1000)
@@ -292,7 +292,6 @@ const EnhancedChatbotCotizacion = ({ onBack }: ChatbotProps) => {
     if (option.action === "download") {
       handlePDFGeneration(option.data)
     } else if (option.action === "reset") {
-      // ADDED this block
       addMessage("bot", "¡Claro! Iniciando una nueva cotización...")
       setTimeout(() => {
         startNewQuotation()
@@ -433,40 +432,26 @@ const EnhancedChatbotCotizacion = ({ onBack }: ChatbotProps) => {
     >
       {/* Loading Overlay */}
       {isGenerating && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-2xl p-8 max-w-sm w-full mx-4 text-center shadow-2xl">
-            <div className="mb-6">
-              <div className="w-16 h-16 border-4 border-gray-200 border-t-black rounded-full animate-spin mx-auto"></div>
+        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 max-w-xs w-full mx-4 text-center shadow-2xl">
+            <div className="mb-4">
+              <Loader2 className="w-12 h-12 text-gray-800 animate-spin mx-auto" />
             </div>
-            <h3 className="text-xl font-semibold text-gray-800 mb-2">Generando tu cotización</h3>
-            <p className="text-gray-600 text-sm">Estamos creando tu documento PDF personalizado...</p>
-            <div className="mt-4 flex justify-center space-x-1">
-              <div className="w-2 h-2 bg-black rounded-full animate-bounce"></div>
-              <div className="w-2 h-2 bg-black rounded-full animate-bounce" style={{ animationDelay: "0.1s" }}></div>
-              <div className="w-2 h-2 bg-black rounded-full animate-bounce" style={{ animationDelay: "0.2s" }}></div>
-            </div>
+            <h3 className="text-lg font-semibold text-gray-800 mb-1">Generando tu cotización</h3>
+            <p className="text-gray-600 text-sm">Estamos creando tu documento PDF...</p>
           </div>
         </div>
       )}
 
       {/* Success Overlay */}
       {showSuccess && (
-        <div className="fixed inset-0 bg-green-500 bg-opacity-90 flex items-center justify-center z-50">
-          <div className="text-center text-white">
-            <div className="mb-6">
-              <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center mx-auto animate-pulse">
-                <Check className="w-12 h-12 text-green-500 animate-bounce" />
-              </div>
+        <div className="fixed inset-0 bg-green-600 bg-opacity-90 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 max-w-xs w-full mx-4 text-center shadow-2xl">
+            <div className="mb-4">
+              <Check className="w-12 h-12 text-green-600 mx-auto animate-bounce" />
             </div>
-            <h2 className="text-3xl font-bold mb-4">¡Descarga Exitosa!</h2>
-            <p className="text-xl">Tu cotización PDF ha sido generada correctamente</p>
-            <div className="mt-6 flex justify-center">
-              <div className="flex space-x-2">
-                <div className="w-3 h-3 bg-white rounded-full animate-pulse"></div>
-                <div className="w-3 h-3 bg-white rounded-full animate-pulse" style={{ animationDelay: "0.2s" }}></div>
-                <div className="w-3 h-3 bg-white rounded-full animate-pulse" style={{ animationDelay: "0.4s" }}></div>
-              </div>
-            </div>
+            <h2 className="text-lg font-bold text-gray-800 mb-1">¡Descarga Exitosa!</h2>
+            <p className="text-gray-600 text-sm">Tu cotización PDF ha sido generada correctamente.</p>
           </div>
         </div>
       )}

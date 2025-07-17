@@ -1,15 +1,15 @@
 /**
  * Pricing constants and configuration for the quotation system
  */
-
 // Fixed values per square meter (corrected according to Excel)
 export const PRICING_PER_M2 = {
-  disenoArquitectonico: 65141, // $65,141/m²
-  disenoEstructural: 33987, // $33,987/m²
-  disenoElectrico: 28322, // $28,322/m²
-  disenoHidraulico: 25490, // $25,490/m²
-  presupuestoObra: 12745, // $12,745/m²
-  acompanamiento: 14161, // $14,161/m²
+  disenoArquitectonico: 54740,
+  disenoEstructural: 28560,
+  disenoElectrico: 23800,
+  disenoHidraulico: 21420,
+  presupuestoObra: 10710,
+  acompanamiento: 11900,
+  costoConstruccion: 1800000, // $1,800,000/m²
 } as const
 
 // Fixed base areas for all projects
